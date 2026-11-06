@@ -17,8 +17,11 @@ pub extern "C" fn craft_core_version() -> *const c_char {
 
 /// C-ABI function to process a JSON request payload and return a JSON response.
 /// Caller must free the returned string using `craft_core_free_string`.
+///
+/// # Safety
+/// Caller must ensure `json_ptr` is either null or points to a valid, null-terminated C string.
 #[no_mangle]
-pub extern "C" fn craft_core_process_payload(json_ptr: *const c_char) -> *mut c_char {
+pub unsafe extern "C" fn craft_core_process_payload(json_ptr: *const c_char) -> *mut c_char {
     if json_ptr.is_null() {
         return std::ptr::null_mut();
     }
@@ -37,8 +40,11 @@ pub extern "C" fn craft_core_process_payload(json_ptr: *const c_char) -> *mut c_
 }
 
 /// C-ABI function to free strings returned by `craft_core_process_payload`.
+///
+/// # Safety
+/// Caller must ensure `ptr` was allocated by `craft_core_process_payload`.
 #[no_mangle]
-pub extern "C" fn craft_core_free_string(ptr: *mut c_char) {
+pub unsafe extern "C" fn craft_core_free_string(ptr: *mut c_char) {
     if !ptr.is_null() {
         unsafe {
             let _ = CString::from_raw(ptr);
