@@ -45,8 +45,9 @@ jobs:
           NDK_PATH=$(ls -d $ANDROID_HOME/ndk/* 2>/dev/null | sort -V | tail -n 1)
           if [ -z "$NDK_PATH" ]; then
             echo "Installing NDK via sdkmanager..."
-            yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses || true
-            $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "ndk;26.1.10909125"
+            SDKMANAGER=$(find $ANDROID_HOME/cmdline-tools -name sdkmanager 2>/dev/null | head -n 1)
+            yes | "$SDKMANAGER" --licenses || true
+            "$SDKMANAGER" "ndk;26.1.10909125"
             NDK_PATH="$ANDROID_HOME/ndk/26.1.10909125"
           fi
           echo "ANDROID_NDK_HOME=$NDK_PATH" >> $GITHUB_ENV
@@ -58,7 +59,7 @@ jobs:
           targets: aarch64-linux-android,armv7-linux-androideabi,x86_64-linux-android
 
       - name: Install cargo-ndk
-        uses: taiki-e/install-action@cargo-ndk
+        run: cargo install cargo-ndk --locked
 
       - name: Build Native JNI Libraries
         run: |
