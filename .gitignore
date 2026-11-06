@@ -1,0 +1,27 @@
+# Rust
+target/
+**/*.rs.bk
+*.pdb
+
+# Android / Gradle
+.gradle/
+build/
+app/build/
+*.apk
+*.aab
+*.ap_
+*.dex
+local.properties
+.cxx/
+
+# IDE / Editors
+.idea/
+*.iml
+.vscode/
+*.swp
+*~
+.DS_Store
+
+# AntiGem / Termux local logs
+*.log
+.antigem/
